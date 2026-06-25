@@ -10,6 +10,8 @@
 - **Password hashing**: `golang.org/x/crypto/bcrypt`
 - **UUIDs**: `google/uuid`
 
+---
+
 ## Project Stucture
 
 ```
@@ -75,3 +77,110 @@ bardista/
 ├── go.mod
 └── go.sum
 ```
+
+---
+
+## Layer Architecture
+
+```text
+HTTP Request
+     │
+     ▼
+ Handler
+     │
+     ▼
+ Service
+     │
+     ▼
+ Repository
+     │
+     ▼
+ Database
+```
+
+- `handler` — parse HTTP request, call service method, write response. No SQL.
+- `service` — business rules, transactions, calculations. No HTTP, no SQL.
+- `repository` — one function per SQL query. Returns domain structs or typed errors.
+
+---
+
+## Entities
+
+### User
+| Field | Type | Notes |
+|---|---|---|
+| id | UUID | PK |
+| name | string | |
+| email | string | unique, used when logging in |
+| password_hash | string | bcrypt, never returned in responses |
+| role | enum | `customer` or `admin` |
+| created_at | timestampz | |
+| updated_at | timestampz | |
+
+### Product
+| Field | Type | Notes |
+|---|---|---|
+| id | UUID | PK |
+| name | string | |
+| description | string | nullable |
+| price | decimal | NUMERIC(10, 2), never float |
+| is_available | bool | false - hidden |
+| deleted_at | timestampz | nullable, soft delete marker |
+| created_at | timestampz | |
+| updated_at | timestampz | |
+
+### Order
+| Field | Type | Notes |
+|---|---|---|
+| id | UUID | PK |
+| user_id | UUID | FK -> users |
+| status | enum | `confirmed`, `pending`, `completed`, `cancelled` |
+| total_price | decimal | frozen at order time |
+| created_at | timestampz | |
+| updated_at | timestampz | |
+
+### OrderItem 
+| Field | Type | Notes |
+|---|---|---|
+| id | UUID | PK |
+| order_id | UUID | FK -> orders |
+| product_it | UUID | FK -> products |
+| quantity | int | ≥ 1 |
+| unit_price | decimal | snapshotted from product at order time |
+
+### Relationships
+- User -> Order: one-to-many
+- Order -> OrderItem: one-to-many
+- Product -> OrderItem: one-to-many
+
+---
+
+## Business rules
+
+- Customers can only view their own orders. Return `404`.
+- An order must have at least one item.
+- Only admins can change status.
+
+---
+
+## Database Schema
+
+TODO
+
+---
+
+## API Endpoints
+
+Base URL: `api/v1`
+
+### Auth
+
+### Products
+
+### Orders
+
+### Request / Response examples
+
+---
+
+## 
