@@ -196,8 +196,30 @@ Base URL: `api/v1`
 | GET | `/orders/:id` | - | `404` if customers tries to see others order |
 | PATCH | `/orders/:id/status` | admin | Update order status |
 
-### Request / Response examples
+---
+
+## Error Codes
+
+All errors use this format:
+```json
+{ "error": {"code": "ERROR_CODE", "message": "msg"}}
+```
+
+| CODE | HTTP status | When |
+|---|---|---|
+| `INVALID_INPUT` | 400 | |
+| `UNAUTHORIZED` | 401 | |
+| `FORBIDDEN` | 403 | |
+| `NOT_FOUND` | 404 | |
+| `CONFLICT` | 409 | |
+| `UNPROCESSABLE` | 422 | |
+| `INTERNAL_ERROR` | 500 | Unexpected server error |
 
 ---
 
-## 
+## Request / Response examples
+
+---
+
+
+
