@@ -174,10 +174,27 @@ TODO
 Base URL: `api/v1`
 
 ### Auth
+| Method | Route | Auth | Description |
+|---|---|---|---|
+| POST | `/auth/register` | - | Create an account |
+| POST | `/auth/login` | - | Returns `{token, user}` |
 
 ### Products
+| Method | Route | Auth | Description |
+|---|---|---|---|
+| GET | `/products` | - | List of available products |
+| GET | `/products/:id` | - | Get single product |
+| POST | `/products` | admin | Create product |
+| PUT | `/products/:id` | admin | Update product |
+| DELETE | `/product/:id` | admin | Remove product (soft) |
 
 ### Orders
+| Method | Route | Auth | Description |
+|---|---|---|---|
+| POST | `/orders` | customer | Place order |
+| GET | `/orders` | - | customers sees own orders, admin sees all |
+| GET | `/orders/:id` | - | `404` if customers tries to see others order |
+| PATCH | `/orders/:id/status` | admin | Update order status |
 
 ### Request / Response examples
 
