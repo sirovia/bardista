@@ -59,13 +59,17 @@ func AuthMiddleware(jwtSecret string) gin.HandlerFunc {
 
 func AdminMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		role, exists := c.Get("Role")
-		if !exists || role != "admin" {
+		role, exists := c.Get("role")
+
+		roleStr, ok := role.(string)
+		if !ok || roleStr != "admin" {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 				"error": gin.H{"code": "FORBIDDEN", "message": "admin access required"},
 			})
 			return
 		}
+
+		_ = exists
 		c.Next()
 	}
 }

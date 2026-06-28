@@ -16,14 +16,14 @@ type User struct {
 }
 
 type Product struct {
-	ID          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Price       float64   `json:"price"`
-	IsAvailable bool      `json:"is_available"`
-	DeletedAt   time.Time `json:"deleted_at,omitempty"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          uuid.UUID  `json:"id"`
+	Name        string     `json:"name"`
+	Description string     `json:"description"`
+	Price       float64    `json:"price"`
+	IsAvailable bool       `json:"is_available"`
+	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
 }
 
 type Order struct {
