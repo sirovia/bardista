@@ -60,15 +60,18 @@ func main() {
 	// repositories
 	userRepo := repository.NewUserRepository(db)
 	productRepo := repository.NewProductRepository(db)
+	orderRepo := repository.NewOrderRepository(db)
 
 	// services
 	expiryHours, _ := strconv.Atoi(cfg.JWTExpiryHours)
 	authService := service.NewAuthService(userRepo, cfg.JWTSecret, time.Duration(expiryHours)*time.Hour)
 	productService := service.NewProductService(productRepo)
+	orderService := service.NewOrderService(orderRepo, productRepo)
 
 	//handlers
 	authHandler := handler.NewAuthHandler(authService)
 	productHandler := handler.NewProductHandler(productService)
+	orderHandler := handler.NewOrderHandler(orderService)
 
 	// router
 	r := gin.Default()
@@ -76,7 +79,7 @@ func main() {
 	r.GET("/api/v1/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
-	router.Setup(r, authHandler, productHandler, cfg.JWTSecret)
+	router.Setup(r, authHandler, productHandler, orderHandler, cfg.JWTSecret)
 
 	addr := fmt.Sprintf(":%s", cfg.ServerPort)
 	log.Printf("Server starting on %s", addr)

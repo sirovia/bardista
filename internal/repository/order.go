@@ -153,6 +153,6 @@ func (r *OrderRepository) GetAll(ctx context.Context) ([]domain.Order, error) {
 
 func (r *OrderRepository) UpdateStatus(ctx context.Context, id uuid.UUID, status string) error {
 	query := `UPDATE orders SET status = $1, updated_at = NOW() WHERE id = $2`
-	_, err := r.db.ExecContext(ctx, query, id, status)
+	_, err := r.db.ExecContext(ctx, query, status, id)
 	return err
 }
